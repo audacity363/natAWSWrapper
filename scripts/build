@@ -1,0 +1,78 @@
+#!/bin/bash
+
+# $1 == lambda function name
+function call {
+    printf "Calling lambda function $1\n"
+    result=$(aws lambda invoke --function-name $1 --log-type Tail \
+        --payload '{"key1":"value1", "key2":"value2", "key3":"value3"}' \
+        outputfile.txt)
+    echo $result
+    echo "================================Logs================================="
+    echo $result | python -c "import sys, json; jsonstr = sys.stdin.read(); print(json.loads(jsonstr)['LogResult'])" | base64 --decode
+    echo "====================================================================="
+    echo "===============================Result================================"
+    cat outputfile.txt
+    echo
+    echo "====================================================================="
+}
+
+# $1 == path to zip file
+# $2 == lambda function name
+function deploy {
+    printf "Deploy zip file $1 to $2..."
+
+    aws lambda update-function-code --function-name $2 --zip-file fileb://./lambdaHandler.zip
+    if [ $? -ne 0 ]; then
+        printf "...failed!\n"
+        return $?
+    fi
+
+    printf "...Done\n"
+    return 0
+}
+
+function build {
+    make
+    makeret=$?
+    if [ $makeret -ne 0 ]; then
+        return $makeret
+    fi
+
+    make aws-lambda-package-lambdaHandler
+    return 0
+}
+
+function cleanbuild {
+    make clean
+    build
+    return $?
+}
+
+FUNCTIONNAME="jsonParsing"
+ZIPFILE="~/Documents/kub/lambda/awsNatWrapper/build/lambdaHandler.zip"
+
+case $1 in
+    call)
+        call $FUNCTIONNAME
+        ;;
+    deploy)
+        deploy $ZIPFILE $FUNCTIONNAME
+        ;;
+    build)
+        build
+        ;;
+    cleanbuild)
+        cleanbuild
+        ;;
+    all)
+        build
+        if [ $? -ne 0 ]; then
+            exit $?
+        fi
+        deploy $ZIPFILE $FUNCTIONNAME
+        call $FUNCTIONNAME
+        ;;
+    *)
+        echo "Usage: $0 {build|cleanbuild|deploy|call|all}"
+        exit 1
+esac

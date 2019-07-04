@@ -2,3 +2,9 @@
 	path = libs/rh4n_vars
 	url = git@github.com:audacity363/rh4n_vars.git
 	branch = awsLambda
+[submodule "libs/rh4n_logging"]
+	path = libs/rh4n_logging
+	url = git@github.com:audacity363/rh4n_logging.git
+[submodule "libs/rh4n_include"]
+	path = libs/rh4n_include
+	url = git@github.com:audacity363/rh4n_include.git
