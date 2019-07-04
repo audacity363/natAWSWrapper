@@ -1,0 +1,4 @@
+[submodule "libs/rh4n_vars"]
+	path = libs/rh4n_vars
+	url = git@github.com:audacity363/rh4n_vars.git
+	branch = awsLambda
