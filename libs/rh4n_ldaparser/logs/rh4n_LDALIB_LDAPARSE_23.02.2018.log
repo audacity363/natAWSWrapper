@@ -1,0 +1,110 @@
+23.02.2018 - 16:47:02.149986 [LDALIB  ->LDAPARSE@33489110] DEBUG   (rh4nldaStartParser@./src/rh4n_ldaparser.c:25) - LDA line: [0001 DEFINE DATA LOCAL ]
+23.02.2018 - 16:47:02.152735 [LDALIB  ->LDAPARSE@33489110] DEBUG   (rh4nldaStartParser@./src/rh4n_ldaparser.c:25) - LDA line: [0002  1 grpone (1:20) ]
+23.02.2018 - 16:47:02.154529 [LDALIB  ->LDAPARSE@33489110] DEBUG   (rh4nldaParseLine@./src/rh4n_ldaparser.c:71) - Found level 1
+23.02.2018 - 16:47:02.156066 [LDALIB  ->LDAPARSE@33489110] DEBUG   (rh4nldaParseLine@./src/rh4n_ldaparser.c:75) - Found varname: [grpone]
+23.02.2018 - 16:47:02.158279 [LDALIB  ->LDAPARSE@33489110] DEBUG   (rh4nldaParseLine@./src/rh4n_ldaparser.c:110) - Found Group with array definition
+23.02.2018 - 16:47:02.159884 [LDALIB  ->LDAPARSE@33489110] DEBUG   (rh4nldaParseLine@./src/rh4n_ldaparser.c:116) - Array specifications: dims: 1, x: 20 y: 943272241, z: 811409476
+23.02.2018 - 16:47:02.161373 [LDALIB  ->LDAPARSE@33489110] DEBUG   (rh4nldaSaveEntry@./src/rh4n_lda_utils.c:13) - Saving first entry
+23.02.2018 - 16:47:02.162863 [LDALIB  ->LDAPARSE@33489110] DEBUG   (rh4nldaStartParser@./src/rh4n_ldaparser.c:25) - LDA line: [0003  2 var1 (A30) ]
+23.02.2018 - 16:47:02.164408 [LDALIB  ->LDAPARSE@33489110] DEBUG   (rh4nldaParseLine@./src/rh4n_ldaparser.c:71) - Found level 2
+23.02.2018 - 16:47:02.165953 [LDALIB  ->LDAPARSE@33489110] DEBUG   (rh4nldaParseLine@./src/rh4n_ldaparser.c:75) - Found varname: [var1]
+23.02.2018 - 16:47:02.167483 [LDALIB  ->LDAPARSE@33489110] DEBUG   (rh4nldaParseLine@./src/rh4n_ldaparser.c:131) - Found vartype: A
+23.02.2018 - 16:47:02.169074 [LDALIB  ->LDAPARSE@33489110] DEBUG   (rh4nldaParseLine@./src/rh4n_ldaparser.c:140) - Found variable length: 30
+23.02.2018 - 16:47:02.171157 [LDALIB  ->LDAPARSE@33489110] DEBUG   (rh4nldaSaveEntry@./src/rh4n_lda_utils.c:25) - Add entry on the next level
+23.02.2018 - 16:47:02.172754 [LDALIB  ->LDAPARSE@33489110] DEBUG   (rh4nldaStartParser@./src/rh4n_ldaparser.c:25) - LDA line: [0004  2 var2 (A30) ]
+23.02.2018 - 16:47:02.174460 [LDALIB  ->LDAPARSE@33489110] DEBUG   (rh4nldaParseLine@./src/rh4n_ldaparser.c:71) - Found level 2
+23.02.2018 - 16:47:02.175971 [LDALIB  ->LDAPARSE@33489110] DEBUG   (rh4nldaParseLine@./src/rh4n_ldaparser.c:75) - Found varname: [var2]
+23.02.2018 - 16:47:02.177561 [LDALIB  ->LDAPARSE@33489110] DEBUG   (rh4nldaParseLine@./src/rh4n_ldaparser.c:131) - Found vartype: A
+23.02.2018 - 16:47:02.179129 [LDALIB  ->LDAPARSE@33489110] DEBUG   (rh4nldaParseLine@./src/rh4n_ldaparser.c:140) - Found variable length: 30
+23.02.2018 - 16:47:02.180628 [LDALIB  ->LDAPARSE@33489110] DEBUG   (rh4nldaSaveEntry@./src/rh4n_lda_utils.c:19) - Add entry on the same level
+23.02.2018 - 16:47:02.182237 [LDALIB  ->LDAPARSE@33489110] DEBUG   (rh4nldaStartParser@./src/rh4n_ldaparser.c:25) - LDA line: [0005  2 grptwo ]
+23.02.2018 - 16:47:02.183747 [LDALIB  ->LDAPARSE@33489110] DEBUG   (rh4nldaParseLine@./src/rh4n_ldaparser.c:71) - Found level 2
+23.02.2018 - 16:47:02.185315 [LDALIB  ->LDAPARSE@33489110] DEBUG   (rh4nldaParseLine@./src/rh4n_ldaparser.c:75) - Found varname: [grptwo]
+23.02.2018 - 16:47:02.186850 [LDALIB  ->LDAPARSE@33489110] DEBUG   (rh4nldaParseLine@./src/rh4n_ldaparser.c:82) - Found Group
+23.02.2018 - 16:47:02.188503 [LDALIB  ->LDAPARSE@33489110] DEBUG   (rh4nldaSaveEntry@./src/rh4n_lda_utils.c:19) - Add entry on the same level
+23.02.2018 - 16:47:02.190043 [LDALIB  ->LDAPARSE@33489110] DEBUG   (rh4nldaStartParser@./src/rh4n_ldaparser.c:25) - LDA line: [0006  3 var3 (A40/1:10) ]
+23.02.2018 - 16:47:02.191604 [LDALIB  ->LDAPARSE@33489110] DEBUG   (rh4nldaParseLine@./src/rh4n_ldaparser.c:71) - Found level 3
+23.02.2018 - 16:47:02.193153 [LDALIB  ->LDAPARSE@33489110] DEBUG   (rh4nldaParseLine@./src/rh4n_ldaparser.c:75) - Found varname: [var3]
+23.02.2018 - 16:47:02.196557 [LDALIB  ->LDAPARSE@33489110] DEBUG   (rh4nldaParseLine@./src/rh4n_ldaparser.c:131) - Found vartype: A
+23.02.2018 - 16:47:02.198205 [LDALIB  ->LDAPARSE@33489110] DEBUG   (rh4nldaParseLine@./src/rh4n_ldaparser.c:140) - Found variable length: 40
+23.02.2018 - 16:47:02.200199 [LDALIB  ->LDAPARSE@33489110] DEBUG   (rh4nldaParseLine@./src/rh4n_ldaparser.c:148) - Found array specifications: dims: 1, x: 10 y: 943272241, z: 811409476
+23.02.2018 - 16:47:02.201829 [LDALIB  ->LDAPARSE@33489110] DEBUG   (rh4nldaSaveEntry@./src/rh4n_lda_utils.c:25) - Add entry on the next level
+23.02.2018 - 16:47:02.203338 [LDALIB  ->LDAPARSE@33489110] DEBUG   (rh4nldaStartParser@./src/rh4n_ldaparser.c:25) - LDA line: [0007  1 arrayone (U/1:10,2:20,3:30) DYNAMIC ]
+23.02.2018 - 16:47:02.204897 [LDALIB  ->LDAPARSE@33489110] DEBUG   (rh4nldaParseLine@./src/rh4n_ldaparser.c:71) - Found level 1
+23.02.2018 - 16:47:02.206443 [LDALIB  ->LDAPARSE@33489110] DEBUG   (rh4nldaParseLine@./src/rh4n_ldaparser.c:75) - Found varname: [arrayone]
+23.02.2018 - 16:47:02.207999 [LDALIB  ->LDAPARSE@33489110] DEBUG   (rh4nldaParseLine@./src/rh4n_ldaparser.c:131) - Found vartype: U
+23.02.2018 - 16:47:02.209514 [LDALIB  ->LDAPARSE@33489110] DEBUG   (rh4nldaParseLine@./src/rh4n_ldaparser.c:140) - Found variable length: -1
+23.02.2018 - 16:47:02.210912 [LDALIB  ->LDAPARSE@33489110] DEBUG   (rh4nldaParseLine@./src/rh4n_ldaparser.c:148) - Found array specifications: dims: 3, x: 10 y: 20, z: 30
+23.02.2018 - 16:47:02.212450 [LDALIB  ->LDAPARSE@33489110] DEBUG   (rh4nldaSaveEntry@./src/rh4n_lda_utils.c:31) - Add entry above the curent entry
+23.02.2018 - 16:47:02.214028 [LDALIB  ->LDAPARSE@33489110] DEBUG   (rh4nldaSaveEntry@./src/rh4n_lda_utils.c:32) - Old level: 3, New level: 1
+23.02.2018 - 16:47:02.215499 [LDALIB  ->LDAPARSE@33489110] DEBUG   (rh4nldaStartParser@./src/rh4n_ldaparser.c:25) - LDA line: [0008  1 TESTSTR (A10) ]
+23.02.2018 - 16:47:02.217134 [LDALIB  ->LDAPARSE@33489110] DEBUG   (rh4nldaParseLine@./src/rh4n_ldaparser.c:71) - Found level 1
+23.02.2018 - 16:47:02.218696 [LDALIB  ->LDAPARSE@33489110] DEBUG   (rh4nldaParseLine@./src/rh4n_ldaparser.c:75) - Found varname: [TESTSTR]
+23.02.2018 - 16:47:02.220262 [LDALIB  ->LDAPARSE@33489110] DEBUG   (rh4nldaParseLine@./src/rh4n_ldaparser.c:131) - Found vartype: A
+23.02.2018 - 16:47:02.221935 [LDALIB  ->LDAPARSE@33489110] DEBUG   (rh4nldaParseLine@./src/rh4n_ldaparser.c:140) - Found variable length: 10
+23.02.2018 - 16:47:02.223514 [LDALIB  ->LDAPARSE@33489110] DEBUG   (rh4nldaSaveEntry@./src/rh4n_lda_utils.c:19) - Add entry on the same level
+23.02.2018 - 16:47:02.225450 [LDALIB  ->LDAPARSE@33489110] DEBUG   (rh4nldaStartParser@./src/rh4n_ldaparser.c:25) - LDA line: [0009  1 REDEFINE     TESTSTR ]
+23.02.2018 - 16:47:02.227002 [LDALIB  ->LDAPARSE@33489110] DEBUG   (rh4nldaParseLine@./src/rh4n_ldaparser.c:71) - Found level 1
+23.02.2018 - 16:47:02.228567 [LDALIB  ->LDAPARSE@33489110] DEBUG   (rh4nldaParseLine@./src/rh4n_ldaparser.c:75) - Found varname: [REDEFINE]
+23.02.2018 - 16:47:02.230183 [LDALIB  ->LDAPARSE@33489110] DEBUG   (rh4nldaParseLine@./src/rh4n_ldaparser.c:87) - Found a redefine
+23.02.2018 - 16:47:02.231635 [LDALIB  ->LDAPARSE@33489110] DEBUG   (rh4nldaParseLine@./src/rh4n_ldaparser.c:91) - Name of redefined variable: [TESTSTR]
+23.02.2018 - 16:47:02.233215 [LDALIB  ->LDAPARSE@33489110] DEBUG   (rh4nldaSaveEntry@./src/rh4n_lda_utils.c:19) - Add entry on the same level
+23.02.2018 - 16:47:02.234867 [LDALIB  ->LDAPARSE@33489110] DEBUG   (rh4nldaStartParser@./src/rh4n_ldaparser.c:25) - LDA line: [0010  2 RETEST1 (A5) ]
+23.02.2018 - 16:47:02.236494 [LDALIB  ->LDAPARSE@33489110] DEBUG   (rh4nldaParseLine@./src/rh4n_ldaparser.c:71) - Found level 2
+23.02.2018 - 16:47:02.238087 [LDALIB  ->LDAPARSE@33489110] DEBUG   (rh4nldaParseLine@./src/rh4n_ldaparser.c:75) - Found varname: [RETEST1]
+23.02.2018 - 16:47:02.239731 [LDALIB  ->LDAPARSE@33489110] DEBUG   (rh4nldaParseLine@./src/rh4n_ldaparser.c:131) - Found vartype: A
+23.02.2018 - 16:47:02.241286 [LDALIB  ->LDAPARSE@33489110] DEBUG   (rh4nldaParseLine@./src/rh4n_ldaparser.c:140) - Found variable length: 5
+23.02.2018 - 16:47:02.242852 [LDALIB  ->LDAPARSE@33489110] DEBUG   (rh4nldaSaveEntry@./src/rh4n_lda_utils.c:25) - Add entry on the next level
+23.02.2018 - 16:47:02.244495 [LDALIB  ->LDAPARSE@33489110] DEBUG   (rh4nldaStartParser@./src/rh4n_ldaparser.c:25) - LDA line: [0011  2 RETEST2 (N5) ]
+23.02.2018 - 16:47:02.246232 [LDALIB  ->LDAPARSE@33489110] DEBUG   (rh4nldaParseLine@./src/rh4n_ldaparser.c:71) - Found level 2
+23.02.2018 - 16:47:02.247735 [LDALIB  ->LDAPARSE@33489110] DEBUG   (rh4nldaParseLine@./src/rh4n_ldaparser.c:75) - Found varname: [RETEST2]
+23.02.2018 - 16:47:02.249466 [LDALIB  ->LDAPARSE@33489110] DEBUG   (rh4nldaParseLine@./src/rh4n_ldaparser.c:131) - Found vartype: N
+23.02.2018 - 16:47:02.251290 [LDALIB  ->LDAPARSE@33489110] DEBUG   (rh4nldaParseLine@./src/rh4n_ldaparser.c:140) - Found variable length: 5
+23.02.2018 - 16:47:02.252701 [LDALIB  ->LDAPARSE@33489110] DEBUG   (rh4nldaSaveEntry@./src/rh4n_lda_utils.c:19) - Add entry on the same level
+23.02.2018 - 16:47:02.254335 [LDALIB  ->LDAPARSE@33489110] DEBUG   (rh4nldaStartParser@./src/rh4n_ldaparser.c:25) - LDA line: [0012 END-DEFINE ]
+23.02.2018 - 16:47:02.255858 [LDALIB  ->LDAPARSE@33489110] DEBUG   (main@./test/main.c:17) - Parser ret: 0
+23.02.2018 - 16:47:02.257390 [LDALIB  ->LDAPARSE@33489110] DEBUG   (main@./test/main.c:18) - Error: []
+23.02.2018 - 16:47:02.259022 [LDALIB  ->LDAPARSE@33489110] DEBUG   (main@./test/main.c:19) - ---------------------------------------------------------------
+23.02.2018 - 16:47:02.260577 [LDALIB  ->LDAPARSE@33489110] DEBUG   (rh4nldaPrintFork@./src/rh4n_lda_print.c:19) - Level: 1
+23.02.2018 - 16:47:02.262253 [LDALIB  ->LDAPARSE@33489110] DEBUG   (rh4nldaPrintFork@./src/rh4n_lda_print.c:21) - Type: Group
+23.02.2018 - 16:47:02.263699 [LDALIB  ->LDAPARSE@33489110] DEBUG   (rh4nldaPrintFork@./src/rh4n_lda_print.c:25) - Length: Dynamic
+23.02.2018 - 16:47:02.265328 [LDALIB  ->LDAPARSE@33489110] DEBUG   (rh4nldaPrintFork@./src/rh4n_lda_print.c:28) - Dimensions: 1, x: 20
+23.02.2018 - 16:47:02.266801 [LDALIB  ->LDAPARSE@33489110] DEBUG   (rh4nldaPrintFork@./src/rh4n_lda_print.c:32) - 
+23.02.2018 - 16:47:02.268241 [LDALIB  ->LDAPARSE@33489110] DEBUG   (rh4nldaPrintFork@./src/rh4n_lda_print.c:19) - 	Level: 2
+23.02.2018 - 16:47:02.269754 [LDALIB  ->LDAPARSE@33489110] DEBUG   (rh4nldaPrintFork@./src/rh4n_lda_print.c:23) - 	Type: A
+23.02.2018 - 16:47:02.271757 [LDALIB  ->LDAPARSE@33489110] DEBUG   (rh4nldaPrintFork@./src/rh4n_lda_print.c:26) - 	Length: 30
+23.02.2018 - 16:47:02.273326 [LDALIB  ->LDAPARSE@33489110] DEBUG   (rh4nldaPrintFork@./src/rh4n_lda_print.c:32) - 
+23.02.2018 - 16:47:02.274970 [LDALIB  ->LDAPARSE@33489110] DEBUG   (rh4nldaPrintFork@./src/rh4n_lda_print.c:19) - 	Level: 2
+23.02.2018 - 16:47:02.276597 [LDALIB  ->LDAPARSE@33489110] DEBUG   (rh4nldaPrintFork@./src/rh4n_lda_print.c:23) - 	Type: A
+23.02.2018 - 16:47:02.278718 [LDALIB  ->LDAPARSE@33489110] DEBUG   (rh4nldaPrintFork@./src/rh4n_lda_print.c:26) - 	Length: 30
+23.02.2018 - 16:47:02.280297 [LDALIB  ->LDAPARSE@33489110] DEBUG   (rh4nldaPrintFork@./src/rh4n_lda_print.c:32) - 
+23.02.2018 - 16:47:02.281912 [LDALIB  ->LDAPARSE@33489110] DEBUG   (rh4nldaPrintFork@./src/rh4n_lda_print.c:19) - 	Level: 2
+23.02.2018 - 16:47:02.283432 [LDALIB  ->LDAPARSE@33489110] DEBUG   (rh4nldaPrintFork@./src/rh4n_lda_print.c:21) - 	Type: Group
+23.02.2018 - 16:47:02.285021 [LDALIB  ->LDAPARSE@33489110] DEBUG   (rh4nldaPrintFork@./src/rh4n_lda_print.c:25) - 	Length: Dynamic
+23.02.2018 - 16:47:02.286955 [LDALIB  ->LDAPARSE@33489110] DEBUG   (rh4nldaPrintFork@./src/rh4n_lda_print.c:32) - 
+23.02.2018 - 16:47:02.288531 [LDALIB  ->LDAPARSE@33489110] DEBUG   (rh4nldaPrintFork@./src/rh4n_lda_print.c:19) - 		Level: 3
+23.02.2018 - 16:47:02.290050 [LDALIB  ->LDAPARSE@33489110] DEBUG   (rh4nldaPrintFork@./src/rh4n_lda_print.c:23) - 		Type: A
+23.02.2018 - 16:47:02.291803 [LDALIB  ->LDAPARSE@33489110] DEBUG   (rh4nldaPrintFork@./src/rh4n_lda_print.c:26) - 		Length: 40
+23.02.2018 - 16:47:02.293374 [LDALIB  ->LDAPARSE@33489110] DEBUG   (rh4nldaPrintFork@./src/rh4n_lda_print.c:28) - 		Dimensions: 1, x: 10
+23.02.2018 - 16:47:02.294898 [LDALIB  ->LDAPARSE@33489110] DEBUG   (rh4nldaPrintFork@./src/rh4n_lda_print.c:32) - 
+23.02.2018 - 16:47:02.296550 [LDALIB  ->LDAPARSE@33489110] DEBUG   (rh4nldaPrintFork@./src/rh4n_lda_print.c:19) - Level: 1
+23.02.2018 - 16:47:02.298125 [LDALIB  ->LDAPARSE@33489110] DEBUG   (rh4nldaPrintFork@./src/rh4n_lda_print.c:23) - Type: U
+23.02.2018 - 16:47:02.299798 [LDALIB  ->LDAPARSE@33489110] DEBUG   (rh4nldaPrintFork@./src/rh4n_lda_print.c:25) - Length: Dynamic
+23.02.2018 - 16:47:02.301298 [LDALIB  ->LDAPARSE@33489110] DEBUG   (rh4nldaPrintFork@./src/rh4n_lda_print.c:31) - Dimensions: 3, x: 10 y: 20 z: 30
+23.02.2018 - 16:47:02.302850 [LDALIB  ->LDAPARSE@33489110] DEBUG   (rh4nldaPrintFork@./src/rh4n_lda_print.c:32) - 
+23.02.2018 - 16:47:02.304828 [LDALIB  ->LDAPARSE@33489110] DEBUG   (rh4nldaPrintFork@./src/rh4n_lda_print.c:19) - Level: 1
+23.02.2018 - 16:47:02.306407 [LDALIB  ->LDAPARSE@33489110] DEBUG   (rh4nldaPrintFork@./src/rh4n_lda_print.c:23) - Type: A
+23.02.2018 - 16:47:02.307913 [LDALIB  ->LDAPARSE@33489110] DEBUG   (rh4nldaPrintFork@./src/rh4n_lda_print.c:26) - Length: 10
+23.02.2018 - 16:47:02.309513 [LDALIB  ->LDAPARSE@33489110] DEBUG   (rh4nldaPrintFork@./src/rh4n_lda_print.c:32) - 
+23.02.2018 - 16:47:02.311016 [LDALIB  ->LDAPARSE@33489110] DEBUG   (rh4nldaPrintFork@./src/rh4n_lda_print.c:19) - Level: 1
+23.02.2018 - 16:47:02.312551 [LDALIB  ->LDAPARSE@33489110] DEBUG   (rh4nldaPrintFork@./src/rh4n_lda_print.c:22) - Type: Redefine
+23.02.2018 - 16:47:02.314115 [LDALIB  ->LDAPARSE@33489110] DEBUG   (rh4nldaPrintFork@./src/rh4n_lda_print.c:25) - Length: Dynamic
+23.02.2018 - 16:47:02.315757 [LDALIB  ->LDAPARSE@33489110] DEBUG   (rh4nldaPrintFork@./src/rh4n_lda_print.c:32) - 
+23.02.2018 - 16:47:02.317322 [LDALIB  ->LDAPARSE@33489110] DEBUG   (rh4nldaPrintFork@./src/rh4n_lda_print.c:19) - 	Level: 2
+23.02.2018 - 16:47:02.318803 [LDALIB  ->LDAPARSE@33489110] DEBUG   (rh4nldaPrintFork@./src/rh4n_lda_print.c:23) - 	Type: A
+23.02.2018 - 16:47:02.320354 [LDALIB  ->LDAPARSE@33489110] DEBUG   (rh4nldaPrintFork@./src/rh4n_lda_print.c:26) - 	Length: 5
+23.02.2018 - 16:47:02.321913 [LDALIB  ->LDAPARSE@33489110] DEBUG   (rh4nldaPrintFork@./src/rh4n_lda_print.c:32) - 
+23.02.2018 - 16:47:02.323434 [LDALIB  ->LDAPARSE@33489110] DEBUG   (rh4nldaPrintFork@./src/rh4n_lda_print.c:19) - 	Level: 2
+23.02.2018 - 16:47:02.325060 [LDALIB  ->LDAPARSE@33489110] DEBUG   (rh4nldaPrintFork@./src/rh4n_lda_print.c:23) - 	Type: N
+23.02.2018 - 16:47:02.327014 [LDALIB  ->LDAPARSE@33489110] DEBUG   (rh4nldaPrintFork@./src/rh4n_lda_print.c:26) - 	Length: 5
+23.02.2018 - 16:47:02.328635 [LDALIB  ->LDAPARSE@33489110] DEBUG   (rh4nldaPrintFork@./src/rh4n_lda_print.c:32) - 

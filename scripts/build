@@ -31,6 +31,8 @@ function deploy {
     return 0
 }
 
+# $1 == path to target zip file
+# $2 == path to fuser to add
 function build {
     make
     makeret=$?
@@ -38,7 +40,32 @@ function build {
         return $makeret
     fi
 
+    #completely clean the old deployment
+    rm -f $1
     make aws-lambda-package-lambdaHandler
+    makeret=$?
+    echo "makeret: $makeret"
+    if [ $makeret -ne 0 ]; then
+        echo "Error while creating zip file $1"
+        return 1
+    fi
+
+	sleep 1
+
+    #only pack fuser if it exists
+    if [ $# -eq 2 ]; then
+        if [ -d $2 ]; then
+        echo "Pack fuser [$2] into [$1]"
+        oldpwd=`pwd`
+        cd "$2/.."
+        zip -ru $1 ./fuser
+        cd $oldpwd
+        else
+            echo "$2 does not exist"
+        fi
+    else
+        echo "No fuser to pack"
+    fi
     return 0
 }
 
@@ -49,7 +76,8 @@ function cleanbuild {
 }
 
 FUNCTIONNAME="jsonParsing"
-ZIPFILE="~/Documents/kub/lambda/awsNatWrapper/build/lambdaHandler.zip"
+ZIPFILE="/home/tom/Documents/kub/lambda/awsNatWrapper/build/lambdaHandler.zip"
+TARGET_FUSER=~/Documents/kub/workspace/.naturalone/fuser
 
 case $1 in
     call)
@@ -59,13 +87,13 @@ case $1 in
         deploy $ZIPFILE $FUNCTIONNAME
         ;;
     build)
-        build
+        build $ZIPFILE $TARGET_FUSER
         ;;
     cleanbuild)
         cleanbuild
         ;;
     all)
-        build
+        build $ZIPFILE $TARGET_FUSER
         if [ $? -ne 0 ]; then
             exit $?
         fi

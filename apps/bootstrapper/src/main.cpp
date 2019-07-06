@@ -21,11 +21,12 @@
 #include <sys/wait.h>
 
 char const TAG[] = "VAR_DUMP";
+char const NATTAG[] = "NATCALLER";
 int gtest = 0;
 
 using namespace aws::lambda_runtime;
 
-static invocation_response callNaturalHandler(invocation_request const& req) {
+static invocation_response callNaturalHandler(invocation_request const& req, const char *natlib, const char *natprog) {
     using namespace Aws::Utils::Json;
 
     JsonValue json(req.payload);
@@ -64,9 +65,37 @@ static invocation_response callNaturalHandler(invocation_request const& req) {
 
     pid_t childpid = fork();
     if(childpid == 0) {
-        std::cerr << "Hello im an the child: " << getpid() << std::endl;
+        const char *execpath = NULL;
+
+        AWS_LOGSTREAM_INFO(NATTAG, "Hello im an the child: " << getpid());
+        AWS_LOGSTREAM_INFO(NATTAG, "Starting [" << natprog << "] from lib [" << natlib << "]");
+
+        /*
+        AWS_LOGSTREAM_INFO(NATTAG, "Delete old fuser");
+        system("rm -r /opt/softwareag/Natural/fuser");
+        
+        AWS_LOGSTREAM_INFO(NATTAG, "Copy new fuser");
+        execpath = getenv("LAMBDA_TASK_ROOT");
+        if (execpath == NULL) {
+            AWS_LOGSTREAM_ERROR(NATTAG, "LAMBDA_TASK_ROOT envvar is not set");
+            exit(1);
+        }
+        AWS_LOGSTREAM_INFO(NATTAG, "Orig location: " << execpath);
+        
+        std::string copyLocation(execpath);
+
+        copyLocation.append("/fuser");
+
+        std::ostringstream s_execcmd;
+        s_execcmd << "cp -r " << copyLocation << " " << "/opt/softwareag/Natural/";
+        std::string execcmd = s_execcmd.str();
+
+        AWS_LOGSTREAM_INFO(NATTAG, "Exec: [" << execcmd << "]");
+        AWS_LOG_FLUSH();*/
+
+        AWS_LOG_FLUSH();
         system("/opt/softwareag/Natural/bin/natbpsrv BPID=natbp");
-        execl("/opt/softwareag/Natural/bin/main", "main", "TOM", "TESTSUB", NULL);
+        execl("/opt/softwareag/Natural/bin/main", "main", natlib, natprog, NULL);
         exit(0);
     }
 
@@ -106,8 +135,9 @@ std::function<std::shared_ptr<Aws::Utils::Logging::LogSystemInterface>()> GetCon
     };
 }
 
-int main() {
+int main(int argc, char *argv[]) {
     using namespace Aws;
+
 
     SDKOptions options;
 
@@ -115,8 +145,28 @@ int main() {
     options.loggingOptions.logger_create_fn = GetConsoleLoggerFactory();
 
     InitAPI(options);
+
+    for(int i = 0; i < argc; i++) {
+        AWS_LOGSTREAM_INFO(TAG, "God cli parm: [" << argv[i] << "]" << std::endl);
+    }
+
+    char *awsHandler = argv[1];
+    char *pointPos = strchr(awsHandler, '.');
+    const char *natlib = NULL, *natprog = NULL;
+    if(pointPos == NULL) {
+        std::cerr << "No Point in Handler found" << std::endl;
+        return -1;
+    }
+    
+    *pointPos = '\0';
+    natlib = awsHandler;
+    natprog = pointPos+1;
+
     {
-        run_handler(callNaturalHandler);
+        auto handler_fn = [natlib, natprog](aws::lambda_runtime::invocation_request const& req) {
+            return callNaturalHandler(req, natlib, natprog);
+        };
+        run_handler(handler_fn);
     }
 
     ShutdownAPI(options);
