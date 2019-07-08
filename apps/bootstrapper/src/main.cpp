@@ -57,7 +57,7 @@ static invocation_response callNaturalHandler(invocation_request const& req, con
         AWS_LOGSTREAM_INFO(TAG, "==================================");
     }
 
-    AWS_LOGSTREAM_INFO(TAG, "Try to fork myself an call someone else");
+    AWS_LOGSTREAM_INFO(TAG, "Try to fork myself and call someone else");
 
     //This is importent. When the log buffer get now flushed it gets completely 
     //cloded with the fork call and every message get's printed out twice
@@ -67,7 +67,7 @@ static invocation_response callNaturalHandler(invocation_request const& req, con
     if(childpid == 0) {
         const char *execpath = NULL;
 
-        AWS_LOGSTREAM_INFO(NATTAG, "Hello im an the child: " << getpid());
+        AWS_LOGSTREAM_INFO(NATTAG, "Hello im am the child: " << getpid());
         AWS_LOGSTREAM_INFO(NATTAG, "Starting [" << natprog << "] from lib [" << natlib << "]");
 
         /*
@@ -93,22 +93,35 @@ static invocation_response callNaturalHandler(invocation_request const& req, con
         AWS_LOGSTREAM_INFO(NATTAG, "Exec: [" << execcmd << "]");
         AWS_LOG_FLUSH();*/
 
-        AWS_LOG_FLUSH();
         system("/opt/softwareag/Natural/bin/natbpsrv BPID=natbp");
-        execl("/opt/softwareag/Natural/bin/main", "main", natlib, natprog, NULL);
+        AWS_LOGSTREAM_INFO(NATTAG, "Calling the nni caller");
+        AWS_LOG_FLUSH();
+        std::ostringstream execcmd;
+        execcmd << "/opt/softwareag/Natural/bin/main " << natlib << " " << natprog;
+        system(execcmd.str().c_str());
+        //int returncode = execl("/opt/softwareag/Natural/bin/main", "main", natlib, natprog, NULL);
+        //AWS_LOGSTREAM_ERROR(NATTAG, "someting on execl went wrong: " << returncode);
+        fflush(stdout);
+        AWS_LOG_FLUSH();
         exit(0);
     }
 
     AWS_LOGSTREAM_INFO(TAG, "Wait for child [" << childpid << "]");
     int status = 0;
     waitpid(childpid, &status, 0);
+    int exitcode = WEXITSTATUS(status);
+    AWS_LOGSTREAM_INFO(TAG, "child exited with code: [" << exitcode << "]");
 
     FILE *natoutputfile = fopen("/tmp/test", "r");
+    if(natoutputfile == NULL) {
+        AWS_LOG_FLUSH();
+        return invocation_response::failure("Output file does not exist", "Devliver Response");
+    }
     char readbuff[100];
     memset(readbuff, 0x00, sizeof(readbuff));
 
     fread(readbuff, sizeof(readbuff), 1, natoutputfile);
-    memset(readbuff, 0x20, 2);
+    //memset(readbuff, 0x20, 2);
 
     AWS_LOGSTREAM_INFO(TAG, "God value from natural: [" << readbuff << "]");
     

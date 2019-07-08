@@ -5,6 +5,9 @@
 #include "rh4n.h"
 #include "rh4n_nat.h"
 
+
+int rh4nnatGenerateDummyProperty(RH4nProperties **props);
+
 int rh4nnatGetParameter(pnni_611_functions nnifuncs, void *parmhandle, RH4nProperties **props, char **formatstr, char *errorstr, bool checkformat) {
     struct parameter_description pdprop, pdformat;
     int nniret = 0;
@@ -22,6 +25,10 @@ int rh4nnatGetParameter(pnni_611_functions nnifuncs, void *parmhandle, RH4nPrope
         return(RH4N_RET_NNI_ERR);
     }
     if(*props == NULL) return(RH4N_RET_PARM_MISSMATCH);*/
+
+
+    rh4nnatGenerateDummyProperty(props);
+
 
     if(!checkformat) return(RH4N_RET_OK);
 
@@ -66,6 +73,7 @@ int rh4nnatParseFormatStr(char *formatstr, struct RH4nNatLDAInfos *pldainfos, RH
         return(RH4N_RET_MALFORMED_FORMAT_STR);
     } else if(at_pos == formatstr) {
         //struct name is empty
+        printf("Struct name ist empty\n"); fflush(stdout);
         return(RH4N_RET_MALFORMED_FORMAT_STR);
     } 
 
@@ -80,6 +88,7 @@ int rh4nnatParseFormatStr(char *formatstr, struct RH4nNatLDAInfos *pldainfos, RH
     if(point_pos) {
         if(point_pos == at_pos+1) {
             //library entry is empty
+            printf("library Name is empty"); fflush(stdout);
             return(RH4N_RET_MALFORMED_FORMAT_STR);
         }
         *point_pos = '\0';
@@ -92,6 +101,7 @@ int rh4nnatParseFormatStr(char *formatstr, struct RH4nNatLDAInfos *pldainfos, RH
 
         if(strlen(point_pos+1) == 0) {
             //LDA name is empty
+            printf("LDA Name is empty"); fflush(stdout);
             return(RH4N_RET_MALFORMED_FORMAT_STR);
         } else if(strlen(point_pos+1) > NNI_LEN_MEMBER) {
             //LDA name is to long
@@ -102,6 +112,7 @@ int rh4nnatParseFormatStr(char *formatstr, struct RH4nNatLDAInfos *pldainfos, RH
     } else {
         if(strlen(at_pos+1) == 0) {
             //LDA name is emptty
+            printf("LDA Name is empty"); fflush(stdout);
             return(RH4N_RET_MALFORMED_FORMAT_STR);
         } else if(strlen(at_pos+1) > NNI_LEN_MEMBER) {
             //LDA name is to long
@@ -136,3 +147,14 @@ int parseVariableFormatStr(char *formatstr, RH4nProperties *props, char *groupna
     return(RH4N_RET_OK);
 }
 
+//Just a dummy function for the first aws lambda prototype
+int rh4nnatGenerateDummyProperty(RH4nProperties **props) {
+    static RH4nProperties lprops; memset(&lprops, 0x00, sizeof(props));
+
+    lprops.natsrcpath = "/var/task/fuser";
+    lprops.outputfile = "/tmp/test";
+    
+    lprops.logging = rh4nLoggingCreateStreamingRule("LIB", "PROG", RH4N_DEVELOP, "");
+    *props = &lprops;
+    return(0);
+}

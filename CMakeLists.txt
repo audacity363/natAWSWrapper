@@ -56,6 +56,12 @@ add_library(rh4nvar2name STATIC
 	./libs/rh4n_var2name/src/rh4n_v2n_resolveposition)
 set_property(TARGET rh4nvar2name PROPERTY POSITION_INDEPENDENT_CODE ON)
 
+add_library(rh4njsongenerator STATIC
+    ./libs/rh4n_jsongenerator/src/rh4n_json_generator
+    ./libs/rh4n_jsongenerator/src/rh4n_json_group
+    ./libs/rh4n_jsongenerator/src/rh4n_json_array)
+set_property(TARGET rh4njsongenerator PROPERTY POSITION_INDEPENDENT_CODE ON)
+
 add_library(realHTML4Natural SHARED
     ./apps/natuser/src/rh4n_nat_jumptab
     ./apps/natuser/src/ncuxinit
@@ -84,7 +90,10 @@ add_library(realHTML4Natural SHARED
 	./apps/natuser/src/put_var_handling/rh4n_nat_put_l
 	./apps/natuser/src/put_var_handling/rh4n_nat_put_f
 	./apps/natuser/src/put_var_handling/rh4n_nat_put_aton)
-target_link_libraries(realHTML4Natural PRIVATE rh4nutils rh4nlogging rh4nvars rh4nldaparser rh4nvar2name)
+target_link_libraries(realHTML4Natural PRIVATE rh4nutils rh4nlogging rh4nvars rh4nldaparser rh4nvar2name rh4njsongenerator)
+
+add_executable(ldatest ./tests/ldaparser.c)
+target_link_libraries(ldatest PRIVATE rh4nutils rh4nlogging rh4nldaparser)
 
 
 add_executable(lambdaHandler ./apps/bootstrapper/src/main.cpp)

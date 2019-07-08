@@ -15,6 +15,7 @@ int rh4nnatInit(void *parmhandle, RH4nNatInit_t *initparms, char *errorstr, bool
         return(utilsret); 
     }
 
+
     if((initparms->nnifuncs = rh4nUtilsgetNNIFunctions(NULL, initparms->sharedlibrary, errorstr)) == NULL) {
         fprintf(stderr, "Loading NNI function failed: [%s]\n", errorstr); fflush(stderr);
         rh4nUtilscloseSharedLibrary(initparms->sharedlibrary);

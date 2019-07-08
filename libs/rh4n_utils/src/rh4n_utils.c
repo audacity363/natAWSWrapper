@@ -150,7 +150,7 @@ char *str_toLower(char *input)
 int rh4nUtilsloadSharedLibrary(RH4nProperties *props, char *name, void **ppsharedLibrary, char *error_str) {
     void *psharedLibrary = NULL;
 
-    rh4n_log_debug(props->logging, "Try to open shared object [%s]", name);
+    if(props) { rh4n_log_debug(props->logging, "Try to open shared object [%s]", name); }
 
     if((psharedLibrary = dlopen(name, RTLD_NOW)) == NULL) {
         if(props) { rh4n_log_error(props->logging, "Failed to open library [%s] - %s", name, dlerror()); }

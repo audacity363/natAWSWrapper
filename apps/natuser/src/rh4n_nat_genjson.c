@@ -26,11 +26,15 @@ long rh4nnatGenJSON(WORD nparms, void *parmhandle, void *traditional) {
         return(utilsret);
     }
 
-    rh4n_log_debug(initparms.props->logging, "Sucessfully got default parms:");
-    rh4n_log_debug(initparms.props->logging, "formatstr: [%s]", initparms.formatstr);
+    //rh4n_log_debug(initparms.props->logging, "Sucessfully got default parms:"); fflush(stderr);
+    fprintf(stdout, "Sucessfully got default parms:\n");
+    //rh4n_log_debug(initparms.props->logging, "formatstr: [%s]", initparms.formatstr); fflush(stderr);
+    fprintf(stdout, "formatstr: [%s]\n", initparms.formatstr); fflush(stdout);
 
-    rh4n_log_debug(initparms.props->logging, "Start parsing formatstr");
+    //rh4n_log_debug(initparms.props->logging, "Start parsing formatstr");
+    fprintf(stdout, "Start parsing formatstr\n"); fflush(stdout);
     if((utilsret = rh4nnatParseFormatStr(initparms.formatstr, &ldainfos, initparms.props)) != RH4N_RET_OK) {
+        fprintf(stdout, "Error parsing format str\n"); fflush(stdout);
         rh4nUtilscloseSharedLibrary(initparms.sharedlibrary);
         free(initparms.formatstr);
         return(utilsret);
@@ -40,12 +44,19 @@ long rh4nnatGenJSON(WORD nparms, void *parmhandle, void *traditional) {
     rh4n_log_info(initparms.props->logging, "Library: [%s]", ldainfos.library);
     rh4n_log_info(initparms.props->logging, "LDA: [%s]", ldainfos.ldaname);
 
+    //For the first prototype the library as to be passed over the format str
+    if(strlen(ldainfos.library) == 0)  {
+        printf("library is empty\n"); fflush(stdout);
+        return(RH4N_RET_MALFORMED_FORMAT_STR);
+    }
+
     rh4nvarInitList(&varlist);
 
     rh4n_log_info(initparms.props->logging, "Start dumping variables");
     if((utilsret = rh4nnatStartVariableReadout(nparms, parmhandle, initparms.nnifuncs, 
             &varlist, initparms.props, errorstr)) != RH4N_RET_OK) {
         rh4n_log_error(initparms.props->logging, "Error while reading variables: %d %s", utilsret, errorstr);
+        printf("Error while reading variables: %d %s", utilsret, errorstr); fflush(stdout);
         rh4nUtilscloseSharedLibrary(initparms.sharedlibrary);
         free(initparms.formatstr);
         return(utilsret);
@@ -54,6 +65,7 @@ long rh4nnatGenJSON(WORD nparms, void *parmhandle, void *traditional) {
     rh4n_log_info(initparms.props->logging, "Start parsing LDA [%s]", ldapath);
     if((utilsret = rh4nldaStartParser(ldapath, &ldavars, initparms.props, errorstr)) != RH4N_RET_OK) {
         rh4n_log_error(initparms.props->logging, "Error while parsing LDA: %d %s", utilsret, errorstr);
+        printf("Error while parsing LDA: %d %s", utilsret, errorstr); fflush(stdout);
         rh4nUtilscloseSharedLibrary(initparms.sharedlibrary);
         free(initparms.formatstr);
         return(utilsret);
@@ -63,6 +75,7 @@ long rh4nnatGenJSON(WORD nparms, void *parmhandle, void *traditional) {
     rh4n_log_info(initparms.props->logging, "Start matching names");
     if((utilsret = rh4nv2nStart(&varlist, ldavars, ldainfos.struct_name, initparms.props, errorstr)) != RH4N_RET_OK) {
         rh4n_log_error(initparms.props->logging, "Could not match names: %d %s", utilsret, errorstr);
+        printf("Could not match names: %d %s", utilsret, errorstr); fflush(stdout);
         rh4nUtilscloseSharedLibrary(initparms.sharedlibrary);
         rh4nldaFreeList(ldavars);
         free(initparms.formatstr);

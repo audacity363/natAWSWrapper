@@ -29,9 +29,10 @@ int rh4nldaStartParser(char *ldapath, RH4nLDAEntry_t **ldaentries, RH4nPropertie
             break;
         }
         free(ldaline);
+        ldaline = NULL;
     }
 
-    free(ldaline);
+    if(ldaline) { free(ldaline); }
     fclose(fplda);
 
     *ldaentries = g_rh4nldaentries;

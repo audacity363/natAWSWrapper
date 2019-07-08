@@ -17,7 +17,7 @@ bool rh4njsonCheckIfJSONArray(RH4nVarEntry_t *target, RH4nProperties *props, sho
     for(hptr = target; hptr != NULL; hptr = hptr->next) {
         rh4n_log_debug(props->logging, "Checking [%s]", hptr->name);
         if(hptr->var.type == RH4NVARTYPEGROUP && ignoreGRP == 1) {
-            if(rh4njsonCheckIfJSONArray(hptr->nextlvl, props) == false) {
+            if(rh4njsonCheckIfJSONArray(hptr->nextlvl, props, ignoreGRP) == false) {
                 return(false);
             }
         } else if(hptr->var.type != RH4NVARTYPEARRAY) {

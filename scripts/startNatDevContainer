@@ -1,0 +1,3 @@
+#!/bin/bash
+
+docker run -d -p 2700:2700 -e ACCEPT_EULA=Y --rm -v /home/tom/Documents/kub/fuser:/opt/softwareag/Natural/fuser store/softwareag/natural-ce:9.1.1 
