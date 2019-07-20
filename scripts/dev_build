@@ -1,0 +1,140 @@
+#!/bin/bash
+
+# $1 == lambda function name
+function call {
+    printf "Calling lambda function $1\n"
+    result=$(aws lambda invoke --function-name $1 --log-type Tail \
+        --payload '{"key1":"value1", "key2":"value2", "key3":"value3"}' \
+        outputfile.txt)
+    echo $result
+    echo "================================Logs================================="
+    echo $result | python -c "import sys, json; jsonstr = sys.stdin.read(); print(json.loads(jsonstr)['LogResult'])" | base64 --decode
+    echo "====================================================================="
+    echo "===============================Result================================"
+    cat outputfile.txt
+    echo
+    echo "====================================================================="
+}
+
+# $1 == path to zip file
+# $2 == lambda function name
+function deployFunction {
+    printf "Deploy zip file $1 to $2..."
+
+    aws lambda update-function-code --function-name $2 --zip-file fileb://./lambdaHandler.zip
+    if [ $? -ne 0 ]; then
+        printf "...failed!\n"
+        return $?
+    fi
+
+    printf "...Done\n"
+    return 0
+}
+
+# $1 == path to target zip file
+# $2 == path to fuser to add
+function build {
+    make
+    makeret=$?
+    if [ $makeret -ne 0 ]; then
+        return $makeret
+    fi
+
+    #completely clean the old deployment
+    rm -f $1
+    make aws-lambda-package-lambdaHandler
+    makeret=$?
+    echo "makeret: $makeret"
+    if [ $makeret -ne 0 ]; then
+        echo "Error while creating zip file $1"
+        return 1
+    fi
+
+    zip -u $1 ./librealHTML4Natural.so 
+
+	sleep 1
+
+    #only pack fuser if it exists
+    if [ $# -eq 2 ]; then
+        if [ -d $2 ]; then
+        echo "Pack fuser [$2] into [$1]"
+        oldpwd=`pwd`
+        cd "$2/.."
+        zip -ru $1 ./fuser
+        cd $oldpwd
+        else
+            echo "$2 does not exist"
+        fi
+    else
+        echo "No fuser to pack"
+    fi
+    return 0
+}
+
+function buildLayer {
+    currentDir=${PWD##*/}
+    if [ $currentDir != "build" ]; then
+        echo "Script must be executed from the build dir"
+        return 1
+    fi
+
+    if [ ! -f ../layer/lambdaNaturalLayer.zip ]; then
+        echo "Layer blueprint is missing!"
+        return 1
+    fi
+
+    make natcaller realHTML4Natural
+    if [ $? -ne 0 ]; then
+        return 1
+    fi
+
+    cd ../layer
+    mkdir -p softwareag/Natural/bin
+    cp ../build/librealHTML4Natural.so ./softwareag/Natural/bin/
+    cp ../build/natcaller ./softwareag/Natural/bin/
+    zip -u ./lambdaNaturalLayer.zip ./softwareag/Natural/bin/librealHTML4Natural.so \
+            ./softwareag/Natural/bin/natcaller
+    ziplocation=`pwd`
+    rm -rf ./softwareag
+    cd ../build
+    echo "You can find the layer here: $ziplocation/lambdaNaturalLayer.zip"
+}
+
+function cleanbuild {
+    make clean
+    build
+    return $?
+}
+
+FUNCTIONNAME="jsonParsing"
+ZIPFILE="/home/tom/Documents/kub/lambda/awsNatWrapper/build/lambdaHandler.zip"
+TARGET_FUSER=~/Documents/kub/fuser
+
+case $1 in
+    call)
+        call $FUNCTIONNAME
+        ;;
+    deployFunction)
+        deployFunction $ZIPFILE $FUNCTIONNAME
+        ;;
+    build)
+        build $ZIPFILE $TARGET_FUSER
+        ;;
+    buildLayer)
+        buildLayer
+        ;;
+    cleanbuild)
+        cleanbuild
+        ;;
+    all)
+        build $ZIPFILE $TARGET_FUSER
+        if [ $? -ne 0 ]; then
+            exit $?
+        fi
+        deployFunction $ZIPFILE $FUNCTIONNAME
+        call $FUNCTIONNAME
+        ;;
+    *)
+        echo "Usage: $0 {build|cleanbuild|deploy|call|all}"
+        exit 1
+esac

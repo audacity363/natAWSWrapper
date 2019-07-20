@@ -13,7 +13,7 @@ int rh4nnatGetParameter(pnni_611_functions nnifuncs, void *parmhandle, RH4nPrope
     int nniret = 0;
 
 
-    /*if((nniret = nnifuncs->pf_nni_get_parm_info(nnifuncs, RH4NNATPROPPOS, parmhandle, &pdprop)) != NNI_RC_OK) 
+    if((nniret = nnifuncs->pf_nni_get_parm_info(nnifuncs, RH4NNATPROPPOS, parmhandle, &pdprop)) != NNI_RC_OK) 
         return(RH4N_RET_NNI_ERR);
     if(pdprop.format != NNI_TYPE_BIN || pdprop.dimensions != 0 || pdprop.length_all == 0) {
         printf("Bin parm missmatch\n");
@@ -24,10 +24,10 @@ int rh4nnatGetParameter(pnni_611_functions nnifuncs, void *parmhandle, RH4nPrope
         printf("nniret: %d\n", nniret);
         return(RH4N_RET_NNI_ERR);
     }
-    if(*props == NULL) return(RH4N_RET_PARM_MISSMATCH);*/
+    if(*props == NULL) return(RH4N_RET_PARM_MISSMATCH);
 
 
-    rh4nnatGenerateDummyProperty(props);
+    //rh4nnatGenerateDummyProperty(props);
 
 
     if(!checkformat) return(RH4N_RET_OK);
@@ -154,7 +154,7 @@ int rh4nnatGenerateDummyProperty(RH4nProperties **props) {
     lprops.natsrcpath = "/var/task/fuser";
     lprops.outputfile = "/tmp/test";
     
-    lprops.logging = rh4nLoggingCreateStreamingRule("LIB", "PROG", RH4N_DEVELOP, "");
+    lprops.logging = rh4nLoggingCreateStreamingRule("LIB", "PROG", RH4N_INFO, "");
     *props = &lprops;
     return(0);
 }

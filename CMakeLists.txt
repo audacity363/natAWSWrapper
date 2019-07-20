@@ -1,6 +1,7 @@
 cmake_minimum_required(VERSION 3.15)
 
 project(awsNatWrapper VERSION 1.0 LANGUAGES C CXX)
+add_definitions(-DAWS)
 
 find_package(aws-lambda-runtime REQUIRED)
 find_package(AWSSDK COMPONENTS s3)
@@ -13,11 +14,12 @@ include_directories(
     ./libs/rh4n_var2name/include
     ./libs/rh4n_ldaparser/include
     ./libs/rh4n_jsongenerator/include
-    ./apps/natuser/include)
+    ./apps/natuser/include
+    ./apps/natcaller/include)
 
 add_library(rh4nutils STATIC 
-    ./libs/rh4n_utils/src/rh4n_utils)
-#./libs/rh4n_utils/src/rh4n_utils_prop)
+    ./libs/rh4n_utils/src/rh4n_utils
+    ./libs/rh4n_utils/src/rh4n_utils_prop)
 set_property(TARGET rh4nutils PROPERTY POSITION_INDEPENDENT_CODE ON)
 
 add_library(rh4nlogging STATIC
@@ -95,6 +97,12 @@ target_link_libraries(realHTML4Natural PRIVATE rh4nutils rh4nlogging rh4nvars rh
 add_executable(ldatest ./tests/ldaparser.c)
 target_link_libraries(ldatest PRIVATE rh4nutils rh4nlogging rh4nldaparser)
 
+add_executable(natcaller 
+    ./apps/natcaller/src/main.c
+    ./apps/natcaller/src/rh4n_nat_errorhandling.c
+    ./apps/natcaller/src/rh4n_nat_parmgeneration.c
+    ./apps/natcaller/src/rh4n_natcall_process.c)
+target_link_libraries(natcaller rh4nutils rh4nlogging rh4nvars rh4nldaparser rh4nvar2name rh4njsongenerator ${CMAKE_DL_LIBS})
 
 add_executable(lambdaHandler ./apps/bootstrapper/src/main.cpp)
 target_link_libraries(lambdaHandler PUBLIC AWS::aws-lambda-runtime ${AWSSDK_LINK_LIBRARIES} rh4nutils rh4nlogging rh4nvars rh4nldaparser rh4nvar2name)

@@ -155,7 +155,7 @@ void rh4njsonpregetCommonDimension(RH4nVarEntry_t *target, int plength[3], int p
     }
     
     rh4n_log_develop(props->logging, "Dims check: [%d] [%d] [%d]", dimOK[0], dimOK[1], dimOK[2]);
-    rh4n_log_develop(props->logging, "sizeof plength: [%d] sizeof mylength: [%d]", sizeof(plength), sizeof(mylength));
+    //rh4n_log_develop(props->logging, "sizeof plength: [%d] sizeof mylength: [%d]", sizeof(plength), sizeof(mylength));
 
     if(plength != NULL) { memcpy(plength, mylength, sizeof(mylength)); }
     if(pdimOK != NULL) { memcpy(pdimOK, dimOK, sizeof(dimOK)); }

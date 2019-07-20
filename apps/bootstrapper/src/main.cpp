@@ -20,6 +20,9 @@
 #include <stdlib.h>
 #include <sys/wait.h>
 
+#include "rh4n.h"
+#include "rh4n_utils.h"
+
 char const TAG[] = "VAR_DUMP";
 char const NATTAG[] = "NATCALLER";
 int gtest = 0;
@@ -67,38 +70,43 @@ static invocation_response callNaturalHandler(invocation_request const& req, con
     if(childpid == 0) {
         const char *execpath = NULL;
 
+        RH4nProperties props; memset(&props, 0x00, sizeof(props));
+
+        strncpy(props.natlibrary, natlib, sizeof(props.natlibrary));
+        strncpy(props.natprogram, natprog, sizeof(props.natprogram));
+
+        props.natparms = (char*)malloc(1);
+        *props.natparms = 0x00;
+        props.i_loglevel = RH4N_DEVELOP;
+        strcpy(props.httpreqtype, "GET");
+
+        props.natsrcpath = (char*)malloc(20);
+        memset(props.natsrcpath, 0x00, 20);
+        strcpy(props.natsrcpath, "/var/task/fuser/");
+
+        props.outputfile = (char*)malloc(20);
+        memset(props.outputfile, 0x00, 20);
+        strcpy(props.outputfile, "/tmp/outputfile");
+
+        props.logpath = (char*)malloc(1);
+        *props.logpath = 0x00;
+
+        strcpy(props.errorrepresentation, "JSON");
+        
+        rh4nUtilsDumpProperties("/tmp/rh4n.props", &props);
+
         AWS_LOGSTREAM_INFO(NATTAG, "Hello im am the child: " << getpid());
         AWS_LOGSTREAM_INFO(NATTAG, "Starting [" << natprog << "] from lib [" << natlib << "]");
 
-        /*
-        AWS_LOGSTREAM_INFO(NATTAG, "Delete old fuser");
-        system("rm -r /opt/softwareag/Natural/fuser");
-        
-        AWS_LOGSTREAM_INFO(NATTAG, "Copy new fuser");
-        execpath = getenv("LAMBDA_TASK_ROOT");
-        if (execpath == NULL) {
-            AWS_LOGSTREAM_ERROR(NATTAG, "LAMBDA_TASK_ROOT envvar is not set");
-            exit(1);
-        }
-        AWS_LOGSTREAM_INFO(NATTAG, "Orig location: " << execpath);
-        
-        std::string copyLocation(execpath);
-
-        copyLocation.append("/fuser");
-
-        std::ostringstream s_execcmd;
-        s_execcmd << "cp -r " << copyLocation << " " << "/opt/softwareag/Natural/";
-        std::string execcmd = s_execcmd.str();
-
-        AWS_LOGSTREAM_INFO(NATTAG, "Exec: [" << execcmd << "]");
-        AWS_LOG_FLUSH();*/
-
+        //Start Natural buffer pool
         system("/opt/softwareag/Natural/bin/natbpsrv BPID=natbp");
+
         AWS_LOGSTREAM_INFO(NATTAG, "Calling the nni caller");
         AWS_LOG_FLUSH();
+
         std::ostringstream execcmd;
         execcmd << "/opt/softwareag/Natural/bin/main " << natlib << " " << natprog;
-        system(execcmd.str().c_str());
+        system("/opt/softwareag/Natural/bin/natcaller /tmp/rh4n.props");
         //int returncode = execl("/opt/softwareag/Natural/bin/main", "main", natlib, natprog, NULL);
         //AWS_LOGSTREAM_ERROR(NATTAG, "someting on execl went wrong: " << returncode);
         fflush(stdout);
@@ -112,12 +120,12 @@ static invocation_response callNaturalHandler(invocation_request const& req, con
     int exitcode = WEXITSTATUS(status);
     AWS_LOGSTREAM_INFO(TAG, "child exited with code: [" << exitcode << "]");
 
-    FILE *natoutputfile = fopen("/tmp/test", "r");
+    FILE *natoutputfile = fopen("/tmp/outputfile", "r");
     if(natoutputfile == NULL) {
         AWS_LOG_FLUSH();
         return invocation_response::failure("Output file does not exist", "Devliver Response");
     }
-    char readbuff[100];
+    char readbuff[2000];
     memset(readbuff, 0x00, sizeof(readbuff));
 
     fread(readbuff, sizeof(readbuff), 1, natoutputfile);
