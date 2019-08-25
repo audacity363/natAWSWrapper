@@ -3,6 +3,8 @@
 
 #include <ostream>
 
+#include "rh4n.h"
+
 #include "./utils/NameStack.h"
 #include "./signatures/Types.h"
 #include "./signatures/ArraySignature.h"

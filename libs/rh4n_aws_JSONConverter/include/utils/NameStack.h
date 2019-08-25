@@ -11,8 +11,10 @@ namespace RH4N::aws::JSONConverter::Utils {
         public:
             void pushName(std::string);
             std::string popName();
-            std::string get(int);
-            int size();
+            std::string get(int) const;
+            int size() const;
+            const char **AsArray();
+            friend std::ostream& operator << (std::ostream&, const NameStack&);
     };
 }
 

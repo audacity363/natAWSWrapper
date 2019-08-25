@@ -6,10 +6,10 @@
 namespace RH4N::aws::JSONConverter {
     class RH4NObject {
         private:
-            std::map<Aws::String, Aws::Utils::Json::JsonView> target;
+            Aws::Map<Aws::String, Aws::Utils::Json::JsonView> target;
         public:
             RH4NObject(Aws::Utils::Json::JsonView*);
-            RH4NObject(std::map<Aws::String, Aws::Utils::Json::JsonView>);
+            RH4NObject(Aws::Map<Aws::String, Aws::Utils::Json::JsonView>);
             Signatures::ObjectSignature* getSignature();
     };
 }

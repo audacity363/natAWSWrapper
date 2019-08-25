@@ -6,13 +6,13 @@ namespace RH4N::aws::JSONConverter {
         this->target = target->GetAllObjects();
     }
 
-    RH4NObject::RH4NObject(std::map<Aws::String, Aws::Utils::Json::JsonView> target) {
+    RH4NObject::RH4NObject(Aws::Map<Aws::String, Aws::Utils::Json::JsonView> target) {
         this->target = target;
     }
     
     Signatures::ObjectSignature *RH4NObject::getSignature() {
         Signatures::ObjectSignature *objsig = new Signatures::ObjectSignature();
-        std::string key;
+        Aws::String key;
 
         Signatures::ArraySignature *arr = NULL;
         Signatures::ObjectSignatureNode *newNode = NULL;
@@ -22,7 +22,7 @@ namespace RH4N::aws::JSONConverter {
             key = objit->first;
             Aws::Utils::Json::JsonView value = objit->second;
 
-            newNode = objsig->addAtEnd(key);
+            newNode = objsig->addAtEnd(std::string(key.c_str(), key.size()));
             newNode->originalvartype = Signatures::Types::getTypefromObject(value);
             newNode->vartype = new Signatures::Types(*newNode->originalvartype);
             if(*newNode->vartype == Signatures::Types::ARRAY) {

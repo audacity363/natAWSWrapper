@@ -8,13 +8,13 @@ namespace RH4N::aws::JSONConverter::Signatures {
     ArraySignature::ArraySignature(ArraySignature &source) {
         this->dimensions = source.dimensions;
         std::memcpy(this->length, source.length, sizeof(int)*3);
-        this->vartype = source.vartype;
+        this->vartype = new Types(*source.vartype);
     }
 
     ArraySignature::ArraySignature(ArraySignature *source) {
         this->dimensions = source->dimensions;
         std::memcpy(this->length, source->length, sizeof(int)*3);
-        this->vartype = source->vartype;
+        this->vartype = new Types(*source->vartype);
     }
 
     ArraySignature::~ArraySignature() {

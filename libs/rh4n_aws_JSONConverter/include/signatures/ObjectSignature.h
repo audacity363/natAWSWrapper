@@ -14,6 +14,14 @@ namespace RH4N::aws::JSONConverter::Signatures {
             void printTabs(int);
             ObjectSignatureNode *getLast();
             ObjectSignatureNode* getNode(ObjectSignatureNode*, std::string name);
+            void fillValues(ObjectSignatureNode *hptr, RH4N::aws::JSONConverter::Utils::NameStack *pointer, 
+                        Aws::Utils::Json::JsonView &root, RH4nVarList*);
+            Aws::Utils::Json::JsonView getJsonTreeEntry(Aws::Utils::Json::JsonView&, RH4N::aws::JSONConverter::Utils::NameStack*);
+            void fillArray(ObjectSignatureNode*, RH4N::aws::JSONConverter::Utils::NameStack*, int, int[3], Aws::Utils::Json::JsonView&, RH4nVarList*);
+            void fillObjectArray(ObjectSignatureNode*, RH4N::aws::JSONConverter::Utils::NameStack*, int, int[3], Aws::Utils::Json::JsonView&, RH4nVarList*);
+            int initRH4NVarListNode(ObjectSignatureNode*, RH4N::aws::JSONConverter::Utils::NameStack*, RH4nVarList*);
+            void initRH4NVarListArray(ObjectSignatureNode*, const char**, RH4nVarList*);
+
         public:
             ~ObjectSignature();
             void freeList();
@@ -24,6 +32,8 @@ namespace RH4N::aws::JSONConverter::Signatures {
             void convertToArray(ArraySignature*);
             void convertToArray(ObjectSignatureNode*, ArraySignature*);
             ObjectSignatureNode* getNode(RH4N::aws::JSONConverter::Utils::NameStack*);
+            void fillValues(Aws::Utils::Json::JsonView &root, RH4nVarList*);
+            RH4nVarList *initRH4NVarList(); 
     };
 }
 

@@ -7,8 +7,6 @@ using namespace RH4N::aws::JSONConverter::Utils;
 
 namespace RH4N::aws::JSONConverter::Signatures {
 
-    //Public
-
     ObjectSignature::~ObjectSignature() {
         //if(this->head) delete this->head;
     }
@@ -47,6 +45,94 @@ namespace RH4N::aws::JSONConverter::Signatures {
         delete tmpNS;
 
         return(result);
+    }
+
+    RH4nVarList *ObjectSignature::initRH4NVarList() {
+        RH4nVarList *varlist = (RH4nVarList*)malloc(sizeof(RH4nVarList));
+        if(varlist == NULL) {
+            throw new std::runtime_error("Could not allocate RH4nVarList");
+        }
+
+        NameStack *pointer = new NameStack();
+
+        rh4nvarInitList(varlist);
+
+        this->initRH4NVarListNode(this->head, pointer, varlist);
+
+        delete(pointer);
+    
+        return(varlist);
+    }
+
+    int ObjectSignature::initRH4NVarListNode(ObjectSignatureNode *hptr, NameStack *pointer, RH4nVarList *varlist) {
+        int rh4nvarret = 0;
+        const char **parents = NULL;
+        const char *chptr;
+
+        if((parents = pointer->AsArray()) == NULL) {
+            throw new std::runtime_error("NameStack->AsArray returned NULL");
+        }
+
+        for(; hptr != NULL; hptr = hptr->next) {
+            if(hptr->nextlvl) {
+                if((rh4nvarret = rh4nvarCreateNewGroup_m(varlist, (char**)parents, (char*)hptr->name.c_str())) != RH4N_RET_OK) {
+                    throw std::runtime_error("rh4nvarCreateNewGroup_m: Error in RH4nVar Libarary: " + std::to_string(rh4nvarret));
+                    free(parents);
+                }
+
+                pointer->pushName(hptr->name);
+                if((rh4nvarret = this->initRH4NVarListNode(hptr->nextlvl, pointer, varlist)) != RH4N_RET_OK) {
+                    free(parents);
+                    throw std::runtime_error("Error in RH4nVar Libarary: " + std::to_string(rh4nvarret));
+                }
+                pointer->popName();
+                //It seems that the intenal array from the vector in the NameStack gets realocated
+                free(parents);
+                parents = pointer->AsArray();
+                continue;
+            }
+
+            if(*hptr->vartype == Types::NULLOBJECT) {
+                continue;
+            }
+
+            switch(*hptr->vartype) {
+                case Types::INT:
+                    rh4nvarCreateNewInt_m(varlist, (char**)parents, (char*)hptr->name.c_str(), 0);
+                    break;
+                case Types::STRING:
+                    rh4nvarCreateNewString_m(varlist, (char**)parents, (char*)hptr->name.c_str(), "");
+                    break;
+                case Types::FLOAT:
+                    rh4nvarCreateNewFloat_m(varlist, (char**)parents, (char*)hptr->name.c_str(), 0.0);
+                    break;
+                case Types::BOOLEAN:
+                    rh4nvarCreateNewBool_m(varlist, (char**)parents, (char*)hptr->name.c_str(), false);
+                    break;
+                case Types::ARRAY:
+                    this->initRH4NVarListArray(hptr, parents, varlist);
+            }
+        }
+
+        free(parents);
+        return(0);
+    }
+
+    void ObjectSignature::initRH4NVarListArray(ObjectSignatureNode *target, const char **parents, RH4nVarList *varlist) {
+        switch(*target->arrsig->vartype) {
+            case Types::INT:
+                rh4nvarCreateNewIntArray_m(varlist, (char**)parents, (char*)target->name.c_str(), target->arrsig->dimensions, target->arrsig->length);
+                break;
+            case Types::STRING:
+                rh4nvarCreateNewStringArray_m(varlist, (char**)parents, (char*)target->name.c_str(), target->arrsig->dimensions, target->arrsig->length);
+                break;
+            case Types::FLOAT:
+                rh4nvarCreateNewFloatArray_m(varlist, (char**)parents, (char*)target->name.c_str(), target->arrsig->dimensions, target->arrsig->length);
+                break;
+            case Types::BOOLEAN:
+                rh4nvarCreateNewBoolArray_m(varlist, (char**)parents, (char*)target->name.c_str(), target->arrsig->dimensions, target->arrsig->length);
+                break;
+        }
     }
 
     void ObjectSignature::convertToArray(ArraySignature *arrsig) {
@@ -89,8 +175,6 @@ namespace RH4N::aws::JSONConverter::Signatures {
         }
     }
 
-    //Private
-   
     bool ObjectSignature::compareNode(ObjectSignatureNode *target, NameStack *parents, 
             ObjectSignature *comparesig) {
         ObjectSignatureNode *hptr = target;
@@ -158,5 +242,146 @@ namespace RH4N::aws::JSONConverter::Signatures {
         }
 
         return(NULL);
+    }
+
+    using namespace Aws::Utils::Json;
+
+    void ObjectSignature::fillValues(JsonView &root, RH4nVarList *varlist) {
+        NameStack *pointer = new NameStack();
+
+        this->fillValues(this->head, pointer, root, varlist);
+    }
+
+    void ObjectSignature::fillValues(ObjectSignatureNode *hptr, NameStack *pointer, JsonView &root, RH4nVarList *varlist) {
+        JsonView target;
+        int arrindex[3] = {0, 0, 0}, rh4nvarret = 0;
+        const char **parents = NULL;
+        RH4nVarRef ref = RH4NVAR_REF_INIT;
+
+        for(; hptr != NULL; hptr = hptr->next) {
+            pointer->pushName(hptr->name);
+            
+            if(*hptr->originalvartype == Types::OBJECT) {
+                this->fillValues(hptr->nextlvl, pointer, root, varlist);
+            } else if(*hptr->originalvartype == Types::ARRAY && *hptr->originalarrsig->vartype == Types::OBJECT) {
+                this->fillObjectArray(hptr->nextlvl, pointer, 1, arrindex, root, varlist);
+            } else if(*hptr->originalvartype == Types::ARRAY) {
+                this->fillArray(hptr, pointer, 1, arrindex, root, varlist);
+            } else {
+                if(!(*hptr->vartype == Types::NULLOBJECT)) {
+                    target = this->getJsonTreeEntry(root, pointer);
+                    parents = pointer->AsArray();
+                    parents[pointer->size()-1] = 0x00;
+                    std::cout << "JSON Entry: " << *pointer << std::endl;
+                    std::cout << "Parents: " << parents << std::endl;
+
+                    if((rh4nvarret = rh4nvarGetRef_m(varlist, (char**)parents, (char*)hptr->name.c_str(), &ref)) != RH4N_RET_OK) {
+                        throw std::runtime_error("rh4nvarGetRef_m retunred: " + std::to_string(rh4nvarret));
+                    }
+
+                    if(this->dim == 0) {
+                        switch(*hptr->vartype) {
+                            case Types::INT:
+                                rh4nvarSetInt(&ref.var->var, target.AsInteger());
+                                break;
+                            case Types::STRING:
+                                rh4nvarSetString(&ref.var->var, (char*)target.AsString().c_str());
+                                break;
+                            case Types::FLOAT:
+                                rh4nvarSetFloat(&ref.var->var, target.AsDouble());
+                                break;
+                            case Types::BOOLEAN:
+                                rh4nvarSetBool(&ref.var->var, target.AsBool());
+                                break;
+                        }
+                    } else {
+                        switch(*hptr->arrsig->vartype) {
+                            case Types::INT:
+                                rh4nvarSetIntArrayEntry_m(varlist, parents, hptr->name.c_str(), this->index, target.AsInteger());
+                                break;
+                            case Types::STRING:
+                                rh4nvarSetStringArrayEntry_m(varlist, parents, hptr->name.c_str(), this->index, (char*)target.AsString().c_str());
+                                break;
+                            case Types::FLOAT:
+                                rh4nvarSetFloatArrayEntry_m(varlist, parents, hptr->name.c_str(), this->index, target.AsDouble());
+                                break;
+                            case Types::BOOLEAN:
+                                rh4nvarSetBoolArrayEntry_m(varlist, parents, hptr->name.c_str(), this->index, target.AsBool());
+                                break;
+                        }
+                    }
+
+                    free(parents);
+                }
+            }
+
+            pointer->popName();
+        }
+    }
+
+    void ObjectSignature::fillArray(ObjectSignatureNode *target, NameStack *pointer, int dim, int index[3], JsonView &root, RH4nVarList *varlist) {
+        JsonView value;
+        const char **parents = NULL;
+
+        this->dim++;
+        for(index[dim-1] = 0; index[dim-1] < target->originalarrsig->length[dim-1]; index[dim-1]++) {
+            this->index[this->dim-1] = index[dim-1];
+
+            if(dim < target->originalarrsig->dimensions) {
+                this->fillArray(target, pointer, dim+1, index, root, varlist);
+            } else {
+                value = this->getJsonTreeEntry(root, pointer);
+
+                parents = pointer->AsArray();
+                parents[pointer->size()-1] = 0x00;
+
+                std::cout << "Name: " << *pointer << std::endl;
+                std::cout << "RH4N index: " << index[0] << ", " << index[1] << ", " << index[2] << std::endl;
+
+                switch(*target->arrsig->vartype) {
+                    case Types::INT:
+                        rh4nvarSetIntArrayEntry_m(varlist, parents, target->name.c_str(), index, value.AsInteger());
+                        break;
+                    case Types::STRING:
+                        rh4nvarSetStringArrayEntry_m(varlist, parents, target->name.c_str(), index, (char*)value.AsString().c_str());
+                        break;
+                    case Types::FLOAT:
+                        rh4nvarSetFloatArrayEntry_m(varlist, parents, target->name.c_str(), index, value.AsDouble());
+                        break;
+                    case Types::BOOLEAN:
+                        rh4nvarSetBoolArrayEntry_m(varlist, parents, target->name.c_str(), index, value.AsBool());
+                        break;
+                }
+                free(parents);
+            }
+        }
+
+        this->index[this->dim-1] = 0;
+        this->dim--;
+    }
+
+    void ObjectSignature::fillObjectArray(ObjectSignatureNode *target, NameStack *pointer, int dim, int index[3], JsonView &root, RH4nVarList *varlist) {
+        this->dim++;
+        for(index[dim-1] = 0; index[dim-1] < target->originalarrsig->length[dim-1]; index[dim-1]++) {
+            this->index[this->dim-1] = index[dim-1];
+            
+            if(dim < target->originalarrsig->length[dim-1]) {
+                this->fillObjectArray(target, pointer, dim+1, index, root, varlist);
+            } else {
+                this->fillValues(target->nextlvl, pointer, root, varlist);
+            }
+        }
+        this->index[this->dim-1] = 0;
+        this->dim--;
+    }
+
+    JsonView ObjectSignature::getJsonTreeEntry(JsonView &root, NameStack *pointer) {
+        JsonView target = root;
+
+        for(int i = 0; i < pointer->size(); i++) {
+            target = target.GetObject(Aws::String(pointer->get(i).c_str()));
+        }
+
+        return(target);
     }
 }
